@@ -3,6 +3,7 @@ from django.http import HttpResponse, Http404
 from django.urls import reverse
 import logging
 from .models import Post
+from django.core.paginator import Paginator
 
 # # posts = [
 #         {
@@ -42,18 +43,22 @@ def index(request):
     posttitle = "Lastest Post"
     pagetitle = "Blog"
     posts = Post.objects.all()
-    return render(request, 'blog/index.html', {'posttitle': posttitle, 'pagetitle': pagetitle, 'posts': posts})
+    paginator = Paginator(posts, 5)
+    page_number = request.GET.get('page')
+    pages = paginator.get_page(page_number)
+    return render(request, 'blog/index.html', {'posttitle': posttitle, 'pagetitle': pagetitle, 'pages': pages})
 
 
-def details(request, post_id):
+def details(request, slug):
     #post = next((item for item in Post.objects.all() if item['id'] == int(post_id)), None)
    # logger = logging.getLogger("Test")
    # logger.debug(f"Test debug {post}")
     try:
-        post = Post.objects.get(id=post_id)
+        post = Post.objects.get(slug=slug)  
+        related_post = Post.objects.filter(category=post.category).exclude(slug=post.slug)                                                     
     except Post.DoesNotExist:
         raise Http404
-    return render(request, 'blog/details.html', {'post': post})   
+    return render(request, 'blog/details.html', {'post': post, 'related_post': related_post})   
 
 
 def old_url(request):

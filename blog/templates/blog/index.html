@@ -15,8 +15,8 @@
             </div>
         </div>
         <div class="row m-3">
-            {% if posts %}
-            {% for post in posts %}
+            {% if pages %}
+            {% for post in pages %}
             <div class="col-4 mb-4">
                 <div class="card">
                     <div class="card-body">
@@ -28,8 +28,8 @@
                                 <h5 class="card-title">{{post.title}}</h5>
                                 <p class="card-text">{{post.content | truncatewords:10}}</p>
                                 <div class="d-flex justify-content-between">
-                                     <a href="{% url 'blog:details' post_id=post.id%}">Read More</a>
-                                    <a class="text-decoration-none text-dark fw-bold" href="#">Sports</a>
+                                     <a href="{% url 'blog:details' slug=post.slug%}">Read More</a>
+                                    <a class="text-decoration-none text-dark fw-bold" href="#">{{post.category}}</a>
                                 </div>
                             </div>
                         </div>

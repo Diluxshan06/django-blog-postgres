@@ -1,12 +1,15 @@
-from blog.models import Post
+from blog.models import Post, Category
 from django.core.management.base import BaseCommand
 from typing import Any
+import random
 
         
 class Command(BaseCommand):
     help = 'Populate posts'
     
     def handle(self, *args, **kwargs):
+        #delete all posts
+        Post.objects.all().delete()
         
         titles = [
             "The Future of AI",
@@ -76,8 +79,9 @@ class Command(BaseCommand):
             "https://picsum.photos/id/19/800/400",
             "https://picsum.photos/id/20/800/400",
         ]
-        
+        category = Category.objects.all()
         for title, content, img in zip(titles, contents, img_urls):
-            Post.objects.create(title=title, content=content, img=img)
+            cat = random.choice(category)
+            Post.objects.create(title=title, content=content, img=img, category=cat)
             
         self.stdout.write(self.style.SUCCESS("Posts populated successfully!"))
