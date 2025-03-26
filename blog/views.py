@@ -4,6 +4,7 @@ from django.urls import reverse
 import logging
 from .models import Post
 from django.core.paginator import Paginator
+from .forms import ContactForm
 
 # # posts = [
 #         {
@@ -43,7 +44,7 @@ def index(request):
     posttitle = "Lastest Post"
     pagetitle = "Blog"
     posts = Post.objects.all()
-    paginator = Paginator(posts, 5)
+    paginator = Paginator(posts, 6)
     page_number = request.GET.get('page')
     pages = paginator.get_page(page_number)
     return render(request, 'blog/index.html', {'posttitle': posttitle, 'pagetitle': pagetitle, 'pages': pages})
@@ -67,3 +68,25 @@ def old_url(request):
 
 def new_url(request):
     return HttpResponse("Hello, world. You're at the new url.")
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        logger = logging.getLogger("Test")
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        if form.is_valid():
+            logger.debug(f"Test debug {form.cleaned_data['name'] } {form.cleaned_data['email']} {form.cleaned_data['message']}")
+            #send email
+            success_message = "your mail has been sent"
+            return render(request, 'blog/contact.html', {'form': form , 'name': name, 'email': email, 'message': message, 'success_message': success_message})
+        else:
+            logger.debug("Test debug form is invalid")
+        return render(request, 'blog/contact.html', {'form': form , 'name': name, 'email': email, 'message': message})
+    return render(request, 'blog/contact.html') 
+
+
+def about(request):
+    return render(request, 'blog/about.html')
