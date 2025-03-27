@@ -2,9 +2,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.urls import reverse
 import logging
-from .models import Post
+from .models import Post, About_us
 from django.core.paginator import Paginator
-from .forms import ContactForm
+from .forms import ContactForm, RegisterForm
+from django.contrib import messages
 
 # # posts = [
 #         {
@@ -89,4 +90,22 @@ def contact(request):
 
 
 def about(request):
-    return render(request, 'blog/about.html')
+    about_us = About_us.objects.first()
+    if about_us is None or not about_us.content:
+        about_us = "Default content"
+    else:
+        about_us = about_us.content
+    return render(request, 'blog/about.html', {'About_us': about_us})
+
+
+def register(request):
+    form = RegisterForm()
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            messages.success(request, "your account has been created. you can log in now")
+            
+    return render(request, 'blog/register.html', {'form': form})

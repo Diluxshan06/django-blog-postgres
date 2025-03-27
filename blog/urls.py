@@ -10,4 +10,5 @@ urlpatterns = [
     path("new_some_url", views.new_url, name="new_url_reverse"),
     path("contact", views.contact, name="contact"),
     path("about", views.about, name="about"),
+    path("register",views.register,name="register"),
 ]

@@ -1,0 +1,68 @@
+{% extends 'blog/base.html' %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row d-flex justify-content-center mt-5">
+            <div class="col-4">
+                <h3>Register</h3>
+                {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                <span class="text-danger">{{error}}</span>
+                </div>
+                {% endfor %}
+                {% if messages %} {%for msg in messages %}<div class="alert alert-success">{{msg}}</div>{% endfor %} {% endif %} 
+                <div class="my-3">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="username" class="form-label">Username</label>
+                            {% if form.errors.username %}
+                            <div class="mb-3">
+                                {% for error in form.errors.username %}
+                                <span class="text-danger">{{error}}</span>
+                                {% endfor %}
+                             </div>
+                            {% endif %}
+                            <input type="text" class="form-control" id="username" name="username" value="{{form.username.value | default:''}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            {% if form.errors.email %}
+                            <div class="mb-3">
+                                {% for error in form.errors.email %}
+                                <span class="text-danger">{{error}}</span>
+                                {% endfor %}
+                             </div>
+                            {% endif %}
+                            <input type="email" class="form-control" id="email" name="email" value="{{form.email.value| default:''}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            {% if form.errors.password %}
+                            <div class="mb-3">
+                                {% for error in form.errors.password %}
+                                <span class="text-danger">{{error}}</span>
+                                {% endfor %}
+                             </div>
+                            {% endif %}
+                            <input type="password" class="form-control" id="password" name="password" >
+                        </div>
+                        <div class="form-group">
+                            <label for="confirm_password" class="form-label">Confirm Password</label>
+                            {% if form.errors.password_confirm %}
+                            <div class="mb-3">
+                                {% for error in form.errors.password_confirm %}
+                                <span class="text-danger">{{error}}</span>
+                                {% endfor %}
+                             </div>
+                            {% endif %}
+                            <input type="password" class="form-control" id="confirm_password" name="password_confirm" >
+                        </div>
+                        <div class="my-3 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-primary">Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
