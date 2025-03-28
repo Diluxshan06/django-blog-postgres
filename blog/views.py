@@ -4,8 +4,9 @@ from django.urls import reverse
 import logging
 from .models import Post, About_us
 from django.core.paginator import Paginator
-from .forms import ContactForm, RegisterForm
+from .forms import ContactForm, RegisterForm, LoginForm
 from django.contrib import messages
+from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 
 # # posts = [
 #         {
@@ -107,5 +108,29 @@ def register(request):
             user.set_password(form.cleaned_data['password'])
             user.save()
             messages.success(request, "your account has been created. you can log in now")
+            return redirect("blog:login")
             
     return render(request, 'blog/register.html', {'form': form})
+
+
+def login(request):
+    form = LoginForm()
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                auth_login(request, user)
+                print("user logged in")
+                return redirect("blog:dashboard")
+    return render(request, 'blog/login.html', {'form': form})
+
+
+def dashboard(request):
+    return render(request, 'blog/dashboard.html')
+
+def logout(request):
+    auth_logout(request)
+    return redirect("blog:index")
