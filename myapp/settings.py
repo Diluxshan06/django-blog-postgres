@@ -52,7 +52,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'myapp.middleware.RedirectAuthenticatedUserMiddleware'
+    'myapp.middleware.RedirectAuthenticatedUserMiddleware',
+    'myapp.middleware.RedirectUnauthenticatedUserMiddleware',
 ]
 
 ROOT_URLCONF = 'myapp.urls'
@@ -152,3 +153,21 @@ LOGGING = {
         "level": "DEBUG",
     },
 }
+
+# DEFAULT_FROM_EMAIL = 'diludilux25@gmail.com'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_USER = 'diludilux25@gmail.com'
+# EMAIL_HOST_PASSWORD = 'dgoyxuyzdwctfwzh' #Django Email pass : dgoy xuyz dwct fwzh
+
+
+DEFAULT_FROM_EMAIL = 'diludilux25@gmail.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'b1589834a59d9f'
+EMAIL_HOST_PASSWORD = 'c49b8df145e5f7' #Django Email pass : dgoy xuyz dwct fwzh
+

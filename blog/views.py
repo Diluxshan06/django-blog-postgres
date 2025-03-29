@@ -4,9 +4,16 @@ from django.urls import reverse
 import logging
 from .models import Post, About_us
 from django.core.paginator import Paginator
-from .forms import ContactForm, RegisterForm, LoginForm
+from .forms import ContactForm, RegisterForm, LoginForm, ForgotPasswordForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
+from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import send_mail
+from django.template.loader import render_to_string
 
 # # posts = [
 #         {
@@ -131,6 +138,37 @@ def login(request):
 def dashboard(request):
     return render(request, 'blog/dashboard.html')
 
+
 def logout(request):
     auth_logout(request)
     return redirect("blog:index")
+
+
+def forgot_password(request):
+    form = ForgotPasswordForm()
+    if request.method == 'POST':
+        form = ForgotPasswordForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            #send email
+            user = User.objects.get(email=email)
+            #send email
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            current_site = get_current_site(request)
+            subject = 'Reset your password'
+            message = render_to_string('blog/reset_password_email.html', { 
+                'domain': current_site.domain,
+                'uid': uid,
+                'token': token,
+            })
+            
+            send_mail(subject, message, 'diludilux25@gmail.com', [email]) 
+            messages.success(request, "Email has been sent")
+        return render(request, 'blog/forgot_password.html', {'form': form})
+            
+    return render(request, 'blog/forgot_password.html', {'form': form})
+
+
+def reset_password(request, uidb64, token):
+    return render(request, 'blog/reset_password.html')
