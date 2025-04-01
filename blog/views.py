@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.urls import reverse
 import logging
-from .models import Post, About_us
+from .models import Post, About_us, Category
 from django.core.paginator import Paginator
-from .forms import ContactForm, RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm
+from .forms import ContactForm, RegisterForm, LoginForm, ForgotPasswordForm, ResetPasswordForm, PostForm
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from django.contrib.auth.models import User
@@ -136,7 +136,12 @@ def login(request):
 
 
 def dashboard(request):
-    return render(request, 'blog/dashboard.html')
+    posttitle = "My Posts"
+    all_post = Post.objects.filter(user_id=request.user)
+    pagination = Paginator(all_post, 6)
+    pag_number = request.GET.get('page')
+    pages = pagination.get_page(pag_number)
+    return render(request, 'blog/dashboard.html', {'pages': pages, 'posttitle': posttitle})
 
 
 def logout(request):
@@ -175,7 +180,7 @@ def reset_password(request, uidb64, token):
     if request.method == 'POST':
         form = ResetPasswordForm(request.POST)
         if form.is_valid():
-            new_password = form.cleaned_data['password']
+            new_password = form.cleaned_data['new_password']
             try:
                 uid = urlsafe_base64_decode(uidb64)
                 user = User.objects.get(pk=uid)
@@ -191,3 +196,21 @@ def reset_password(request, uidb64, token):
                 messages.error(request, "Link is invalid")
                 
     return render(request, 'blog/reset_password.html', {'form': form})
+
+
+def new_post(request):
+    cato = Category.objects.all()
+    form = PostForm()
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.user_id = request.user
+            post.save()
+        return redirect("blog:dashboard")
+    return render(request, 'blog/new_post.html',{'category': cato, 'form': form})
+
+
+def edit_post(request, post_id):
+    cato = Category.objects.all()
+    return render(request, 'blog/edit_post.html', {'category': cato})

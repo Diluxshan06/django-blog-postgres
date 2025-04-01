@@ -171,3 +171,10 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'b1589834a59d9f'
 EMAIL_HOST_PASSWORD = 'c49b8df145e5f7' #Django Email pass : dgoy xuyz dwct fwzh
 
+
+
+import os
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
