@@ -33,7 +33,7 @@
                                 {% endfor %}
                              </div>
                             {% endif %}
-                            <input type="text" class="form-control" name="title" id="title" value="{{form.title.value | default:''}}">
+                            <input type="text" class="form-control" name="title" id="title" value="{{post.title}}">
                         </div>
                        
                         <div class="form-group">
@@ -45,11 +45,11 @@
                                 {% endfor %}
                              </div>
                             {% endif %}
-                            <textarea class="form-control" id="content" name="content" value="{{form.content.value | default:''}}"></textarea>
+                            <textarea class="form-control" id="content" name="content" >{{post.content}}</textarea>
                         </div>
                         <div class="form-group">
                             <label for="image" class="form-label">Image</label>
-                            <input type="file" class="form-control-file" id="image" name="img">
+                            <input type="file" class="form-control-file" id="image" name="img" >
                         </div>
     
                         <div class="form-group">
@@ -62,15 +62,14 @@
                              </div>
                             {% endif %}
                             <select class="form-control" id="category" name="category">
-                                <option value="">Select Category</option>
                                {% for cato in category %}
-                               <option value="{{cato.id}}">{{cato.name}}</option>
+                               <option {% if cato.id == post.category.id %} selected {% endif %} value="{{cato.id}}">{{cato.name}}</option>
                                {% endfor %}
                             </select>
                         </div>
                        
                         <div class="my-3 d-flex justify-content-end">
-                            <button type="submit" class="btn btn-primary">Create</button>
+                            <button type="submit" class="btn btn-primary">Update</button>
                         </div>
                     </form>
                 </div>

@@ -5,6 +5,7 @@
             <div class="col">
                 <h2 >{{posttitle | upper}}</h2>
             </div>
+            {% if messages %} {%for msg in messages %}<div class="alert alert-warning">{{msg}}</div>{% endfor %} {% endif %}
             <div class="col-3">
                 <div class="input-group">
                     <input type="text" class="form-control" placeholder="Search..." aria-label="Search">
